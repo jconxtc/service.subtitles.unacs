@@ -43,6 +43,7 @@ def savetofile(d, name):
 
 def dump_src(s, name):
   if run_from_xbmc == False:
-    f = open(name,'wb')
+    n = os.path.join(path, name)
+    f = open(n,'wb')
     f.write(s.prettify().encode('utf-8', 'replace'))
     f.close()

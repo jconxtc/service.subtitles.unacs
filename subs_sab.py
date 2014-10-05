@@ -31,15 +31,16 @@ head = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:22.0) Gecko/20100101 F
 url = "subs.sab.bz"
 
 def clean_info(dat):
+  dat = re.sub(r"(?:\\'|<br\s\/>|<a[\s\S].*?<\/a>|\:\s.*?;)", "", dat)
   soup = BeautifulSoup(dat)
-  return soup.get_text(' ').encode('utf-8', 'replace').split("'")[1]
+  return soup.get_text(' ').encode('utf-8', 'replace')
 
 def get_id_url_n(txt, list):
   soup = BeautifulSoup(txt, parse_only=SoupStrainer('tr'))
   for link in soup.find_all('a', href=re.compile(r'[\S]attach_id=(?:\d+)')):
     t = link.find_parent('td').find_next_siblings('td', text=True)
     list.append({'url': link['href'].split('attach_id=')[1],
-                'info': clean_info(link.get('onmouseover').encode('utf-8', 'replace')),
+                'info': clean_info(link.get('onmouseover').encode('utf-8', 'replace').split("ddrivetip('")[1].split("','")[0]),
                 'year': link.find_parent('td').get_text().split('(')[1].split(')')[0],
                 'cds': t[2].string.encode('utf-8', 'replace'),
                 'fps': t[3].string.encode('utf-8', 'replace'),

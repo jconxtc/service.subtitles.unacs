@@ -34,12 +34,13 @@ headers = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64; rv:22.0) Gecko/2010010
 url = 'http://subsunacs.net:80'
 
 def clean_info(dat):
+  dat = re.sub(r'(?:<img[\s\S]*?>)', '', dat)
   soup = BeautifulSoup(dat)
   return soup.get_text(' ').encode('utf-8', 'replace').replace('  ', ' ')
 
 def get_id_url_n(txt, list):
   soup = BeautifulSoup(txt, parse_only=SoupStrainer('tr'))
-  # dump_src(soup, 'src.html')
+  dump_src(soup, 'src_un.html')
   for link in soup.find_all('a', href=re.compile(r'(?:\/subtitles\/)')):
     t = link.find_parent('td').find_next_siblings('td')
     list.append({'url': link['href'],
